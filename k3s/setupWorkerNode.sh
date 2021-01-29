@@ -42,7 +42,7 @@ resolvConfig() {
 installK3s() {
   message "installing K3S Cluster"
 
-  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --tls-san k3s-node-hp-i7 --disable servicelb --disable traefik --disable local-storage --flannel-backend=host-gw --node-label k3s-upgrade=enabled " sh -
+  curl -sfL https://get.k3s.io | K3S_URL=https://k3s-node-hp-i7:6443 K3S_TOKEN=$K3OS_TOKEN sh -s - --node-label k3s-upgrade=enabled
 
   sudo apt autoremove -fy
 
