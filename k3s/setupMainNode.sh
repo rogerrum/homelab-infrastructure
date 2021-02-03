@@ -69,12 +69,19 @@ installVault() {
 
 }
 
+installVelero() {
+  wget https://github.com/vmware-tanzu/velero/releases/download/v1.5.3/velero-v1.5.3-linux-amd64.tar.gz
+  tar -zxvf velero-v1.5.3-linux-amd64.tar.gz
+  sudo mv velero-v1.5.3-linux-amd64/velero /usr/local/bin/
+}
+
 installPackages
 resolvConfig
 installK3s
 installFlux
 installHelm
 installVault
+installVelero
 
 message "All Done - Use the token below to setup workers"
 sudo cat /var/lib/rancher/k3s/server/node-token
