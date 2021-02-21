@@ -37,7 +37,7 @@ installK3s() {
   message "installing K3S Cluster"
 
   #curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.19.7+k3s1 INSTALL_K3S_EXEC="server --token $K3S_TOKEN --server https://rancher-server-1:6443 --node-label k3s-upgrade=enabled " sh -
-  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --token $K3S_TOKEN --server https://rancher-server-1:6443 --node-label k3s-upgrade=enabled " sh -
+  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --token $K3S_TOKEN --server https://rancher-server-1:6443 --disable servicelb --disable traefik --disable local-storage --flannel-backend=host-gw --node-label k3s-upgrade=enabled " sh -
 
   sudo apt autoremove -fy
 
