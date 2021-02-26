@@ -15,7 +15,7 @@
   ```text
   address=/k8s.local/192.168.2.2
   address=/k3s.local/192.168.60.150
-  address=/rsr.net/192.168.60.150
+  address=/rsr.net/192.168.100.150
   ```
 - Save and reboot pi-hole
 
