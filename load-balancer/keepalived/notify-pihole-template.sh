@@ -5,8 +5,7 @@ NAME=$2
 STATE=$3
 HOST=$(hostname)
 
-curl -X POST --data-urlencode "payload={\"channel\": \"#general\", \"username\": \"$HOST\", \"text\": \":exclamation: *PiHole* keepalived on *$HOST* is now in *$STATE* state\", \"icon_emoji\": \":skull:\"}" <SLACK_TOKEN>
-
+curl -X POST  -H 'Content-type: application/json' --data "{\"channel\": \"#general\", \"username\": \"$HOST\", \"content\": \":exclamation: **PiHole** keepalived on **$HOST** is now in **$STATE** state\", \"avatar_url\": \"https://raw.githubusercontent.com/rogerrum/icons/main/images/skull.png\"}" <DISCORD_WEBHOOK>
 case $STATE in
         "MASTER") /usr/bin/docker exec pihole pihole restartdns
                   ;;
