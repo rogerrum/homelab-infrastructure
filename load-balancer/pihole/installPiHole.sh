@@ -5,6 +5,11 @@
 PIHOLE_BASE="${PIHOLE_BASE:-$(pwd)}"
 [[ -d "$PIHOLE_BASE" ]] || mkdir -p "$PIHOLE_BASE" || { echo "Couldn't create storage directory: $PIHOLE_BASE"; exit 1; }
 
+docker pull pihole/pihole:latest
+
+docker stop pihole
+docker rm pihole
+
 # Note: ServerIP should be replaced with your external ip.
 docker run -d \
     --name pihole \
