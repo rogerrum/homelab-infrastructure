@@ -41,7 +41,6 @@ resolvConfig() {
 installK3s() {
   message "installing K3S Cluster"
 
-  #curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.19.7+k3s1 K3S_URL=https://rancher.rsr.net:6443 K3S_TOKEN=$K3S_TOKEN sh -s - --node-label k3s-upgrade=enabled
   curl -sfL https://get.k3s.io | K3S_URL=https://rancher.rsr.net:6443 K3S_TOKEN=$K3S_TOKEN sh -s - --node-taint arm64=true:NoExecute --node-label k3s-upgrade=enabled
 
   sudo apt autoremove -fy

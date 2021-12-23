@@ -30,7 +30,6 @@ resolvConfig() {
 installK3s() {
   message "installing K3S Cluster"
 
-  #curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.19.7+k3s1  INSTALL_K3S_EXEC="server  --cluster-init  --token $K3S_TOKEN --tls-san rancher-server-1 --tls-san rancher-server-2 --tls-san rancher-server-3 --tls-san rancher.rsr.net --disable servicelb --disable traefik --disable local-storage --flannel-backend=host-gw --node-label k3s-upgrade=enabled " sh -
   curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server  --cluster-init  --token $K3S_TOKEN --tls-san k8s-0-cp --tls-san k8s-1-cp --tls-san k8s-2-cp-hp7 --tls-san rancher.rsr.net --disable servicelb --disable traefik --disable local-storage --flannel-backend=host-gw --node-label k3s-upgrade=enabled " sh -
 
   sudo apt autoremove -fy
@@ -44,13 +43,6 @@ installK3s() {
   kubectl get nodes -o wide
 }
 
-
-#installFlux() {
-#  message "installing installFlux"
-#
-#  curl -s https://toolkit.fluxcd.io/install.sh | sudo bash
-#
-#}
 
 installHelm() {
   message "installing installHelm"
@@ -70,13 +62,6 @@ installVault() {
 
 }
 
-installVelero() {
-  wget https://github.com/vmware-tanzu/velero/releases/download/v1.5.3/velero-v1.5.3-linux-amd64.tar.gz
-  tar -zxvf velero-v1.5.3-linux-amd64.tar.gz
-  sudo mv velero-v1.5.3-linux-amd64/velero /usr/local/bin/
-}
-
-
 token="$(openssl rand -base64 48)"
 export K3S_TOKEN=$token
 message $token
@@ -84,10 +69,8 @@ message $token
 installPackages
 resolvConfig
 installK3s
-#installFlux
 installHelm
 installVault
-installVelero
 
 message "All Done - Use the token below to setup workers"
 sudo cat /var/lib/rancher/k3s/server/node-token
