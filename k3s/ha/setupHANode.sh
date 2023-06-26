@@ -58,14 +58,14 @@ installHelm() {
 
 }
 
-installVault() {
-  curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-
-  sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-
-  sudo apt-get update && sudo apt-get install -fy vault
-
-}
+#installVault() {
+#  curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+#
+#  sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+#
+#  sudo apt-get update && sudo apt-get install -fy vault
+#
+#}
 
 
 export K3S_TOKEN=$1
@@ -74,7 +74,7 @@ installPackages
 resolvConfig
 installK3s
 installHelm
-installVault
+#installVault
 
 message "All Done - Use the token below to setup workers"
 sudo cat /var/lib/rancher/k3s/server/node-token
