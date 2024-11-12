@@ -27,6 +27,13 @@ else
   updates_available=$updates_available_apt_get
 fi
 
+# Check if a reboot is needed
+if [ -f /var/run/reboot-required ]; then
+  reboot_needed=1
+else
+  reboot_needed=0
+fi
+
 # Get the host IP
 host_ip=$(hostname -I | awk '{print $1}')
 
@@ -49,6 +56,7 @@ cat <<EOF | curl --insecure --data-binary @- "$pushgateway_url"
   server_last_reboot_time{host="$hostname",host_ip="$host_ip"} $last_reboot_time_epoch
   server_last_updated_time{host="$hostname",host_ip="$host_ip"} $last_updated_time_epoch
   server_updates_available{host="$hostname",host_ip="$host_ip"} $updates_available
+  server_reboot_needed{host="$hostname",host_ip="$host_ip"} $reboot_needed
   server_last_login_time{host="$hostname",host_ip="$host_ip"} $last_login_time_epoch
   server_cpu_usage{host="$hostname",host_ip="$host_ip"} $cpu_usage
   server_mem_usage{host="$hostname",host_ip="$host_ip"} $mem_usage
