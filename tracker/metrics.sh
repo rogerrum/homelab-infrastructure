@@ -5,15 +5,27 @@ hostname=$(hostname)
 pushgateway_url="https://pushgateway.rsr.net/metrics/job/server_metrics/instance/$hostname"
 
 # Get the last reboot time
-last_reboot_time=$(who -b | awk '{print $3, $4}')
+last_reboot_time=$(uptime -s)
 last_reboot_time_epoch=$(date -d "$last_reboot_time" +%s)
 
 # Get the last update time
-last_updated_time=$(stat -c %y /var/lib/apt/periodic/update-success-stamp)
+if [ -f /var/lib/apt/periodic/update-success-stamp ]; then
+  last_updated_time=$(stat -c %y /var/lib/apt/periodic/update-success-stamp)
+else
+  last_updated_time=$(grep " upgrade " /var/log/dpkg.log | tail -n 1 | awk '{print $1, $2}')
+fi
 last_updated_time_epoch=$(date -d "$last_updated_time" +%s)
 
-# Get the number of updates available
-updates_available=$(apt list --upgradable 2>/dev/null | grep -c '^')
+# Run both commands to get the number of updates available
+updates_available_apt_list=$(apt list --upgradable 2>/dev/null | grep -c '^')
+updates_available_apt_get=$(apt-get -s upgrade | grep -P '^\d+ upgraded' | awk '{print $1}')
+
+# Compare the results and use the one that lists more updates
+if [ "$updates_available_apt_list" -ge "$updates_available_apt_get" ]; then
+  updates_available=$updates_available_apt_list
+else
+  updates_available=$updates_available_apt_get
+fi
 
 # Get the host IP
 host_ip=$(hostname -I | awk '{print $1}')
