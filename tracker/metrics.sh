@@ -35,7 +35,7 @@ else
 fi
 
 # Get the host IP
-host_ip=$(hostname -I | awk '{print $1}')
+host_ip=$(ip -4 addr show | grep -oP '(?<=inet\s)192\.\d+\.\d+\.\d+' | paste -sd, -)
 
 # Get the last login time
 last_login_time=$(last -F | head -n 1 | awk '{print $5, $6, $7, $8}')
