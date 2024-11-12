@@ -41,6 +41,9 @@ host_ip=$(ip -4 addr show | grep -oP '(?<=inet\s)192\.\d+\.\d+\.\d+' | paste -sd
 last_login_time=$(last -F | head -n 1 | awk '{print $5, $6, $7, $8}')
 last_login_time_epoch=$(date -d "$last_login_time" +%s)
 
+# Get the current date and time as last seen date in epoch
+last_push_time_epoch=$(date +%s)
+
 # Get the CPU usage
 cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
 
@@ -58,6 +61,7 @@ cat <<EOF | curl --insecure --data-binary @- "$pushgateway_url"
   server_updates_available{host="$hostname",host_ip="$host_ip"} $updates_available
   server_reboot_needed{host="$hostname",host_ip="$host_ip"} $reboot_needed
   server_last_login_time{host="$hostname",host_ip="$host_ip"} $last_login_time_epoch
+  server_last_push_time{host="$hostname",host_ip="$host_ip"} $last_push_time_epoch
   server_cpu_usage{host="$hostname",host_ip="$host_ip"} $cpu_usage
   server_mem_usage{host="$hostname",host_ip="$host_ip"} $mem_usage
   server_disk_space_used{host="$hostname",host_ip="$host_ip"} $disk_space_used
