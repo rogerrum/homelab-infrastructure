@@ -4,6 +4,9 @@
 hostname=$(hostname)
 pushgateway_url="https://pushgateway.rsr.net/metrics/job/server_metrics/instance/$hostname"
 
+# Get the OS version
+os_version=$(lsb_release -d | awk -F"\t" '{print $2}')
+
 # Get the last reboot time
 last_reboot_time=$(uptime -s)
 last_reboot_time_epoch=$(date -d "$last_reboot_time" +%s)
@@ -56,14 +59,14 @@ disk_space_free=$(df / | grep / | awk '{print $4}')
 
 # Push the metrics to the Pushgateway
 cat <<EOF | curl --insecure --data-binary @- "$pushgateway_url"
-  server_last_reboot_time{host="$hostname",host_ip="$host_ip"} $last_reboot_time_epoch
-  server_last_updated_time{host="$hostname",host_ip="$host_ip"} $last_updated_time_epoch
-  server_updates_available{host="$hostname",host_ip="$host_ip"} $updates_available
-  server_reboot_needed{host="$hostname",host_ip="$host_ip"} $reboot_needed
-  server_last_login_time{host="$hostname",host_ip="$host_ip"} $last_login_time_epoch
-  server_last_push_time{host="$hostname",host_ip="$host_ip"} $last_push_time_epoch
-  server_cpu_usage{host="$hostname",host_ip="$host_ip"} $cpu_usage
-  server_mem_usage{host="$hostname",host_ip="$host_ip"} $mem_usage
-  server_disk_space_used{host="$hostname",host_ip="$host_ip"} $disk_space_used
-  server_disk_space_free{host="$hostname",host_ip="$host_ip"} $disk_space_free
+  server_last_reboot_time{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $last_reboot_time_epoch
+  server_last_updated_time{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $last_updated_time_epoch
+  server_updates_available{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $updates_available
+  server_reboot_needed{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $reboot_needed
+  server_last_login_time{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $last_login_time_epoch
+  server_last_push_time{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $last_push_time_epoch
+  server_cpu_usage{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $cpu_usage
+  server_mem_usage{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $mem_usage
+  server_disk_space_used{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $disk_space_used
+  server_disk_space_free{host="$hostname",host_ip="$host_ip",os_version="$os_version"} $disk_space_free
 EOF
