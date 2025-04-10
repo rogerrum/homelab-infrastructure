@@ -17,8 +17,8 @@ curl -o "$TARGET_FILE" "$GITHUB_URL"
 # Make the downloaded file executable
 chmod +x "$TARGET_FILE"
 
-# Add the cron job
-(crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+# Add or update the cron job for metrics
+(crontab -l 2>/dev/null | grep -v "$TARGET_FILE"; echo "$CRON_JOB") | crontab -
 
-# Add the cron job for self-update
+# Add or update the cron job for self-update
 (crontab -l 2>/dev/null | grep -v "setupTracker.sh"; echo "$SELF_UPDATE_CRON_JOB") | crontab -
