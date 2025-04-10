@@ -11,6 +11,16 @@ os_version=$(lsb_release -d | awk -F"\t" '{print $2}')
 last_reboot_time=$(uptime -s)
 last_reboot_time_epoch=$(date -d "$last_reboot_time" +%s)
 
+# Get the CPU usage
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+
+# Get the memory usage
+mem_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
+
+# Get the disk space usage
+disk_space_used=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
+disk_space_free=$(df / | grep / | awk '{print $4}')
+
 # Get the last update time
 if [ -f /var/lib/apt/periodic/update-success-stamp ]; then
   last_updated_time=$(stat -c %y /var/lib/apt/periodic/update-success-stamp)
@@ -47,15 +57,7 @@ last_login_time_epoch=$(date -d "$last_login_time" +%s)
 # Get the current date and time as last seen date in epoch
 last_push_time_epoch=$(date +%s)
 
-# Get the CPU usage
-cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
 
-# Get the memory usage
-mem_usage=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
-
-# Get the disk space usage
-disk_space_used=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
-disk_space_free=$(df / | grep / | awk '{print $4}')
 
 # Push the metrics to the Pushgateway
 cat <<EOF | curl --insecure --data-binary @- "$pushgateway_url"
