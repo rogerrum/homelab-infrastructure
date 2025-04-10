@@ -18,7 +18,7 @@ curl -o "$TARGET_FILE" "$GITHUB_URL"
 chmod +x "$TARGET_FILE"
 
 # Add or update the cron job for metrics
-(crontab -l 2>/dev/null | grep -v "$TARGET_FILE"; echo "$CRON_JOB") | crontab -
+(crontab -l 2>/dev/null | grep -v "metrics.sh"; echo "$CRON_JOB") | crontab -
 
 # Add or update the cron job for self-update
 (crontab -l 2>/dev/null | grep -v "setupTracker.sh"; echo "$SELF_UPDATE_CRON_JOB") | crontab -
